@@ -46,7 +46,7 @@ python cli.py hello
 Console output: `Hello, this is simple CLI task manager!`
 
 ## Roadmap
-- [ ] `add [title] [description]` — add new task.
+- [x] `add [title] [description]` — add new task.
 - [ ] `list` — print all tasks (with possible status filters).
 - [ ] `update [id] [new title] [new description]` — edit task info.
 - [ ] `delete [id]` — delete task by id.
