@@ -2,21 +2,23 @@
 import click
 from storage import JSONStorage, Task
 
+
 @click.group()
-@click.pass_context # Для передачи ctx.obj
+@click.pass_context  # For passing ctx.obj
 def cli(ctx: click.Context):
     """Главная группа команд. Инициализирует хранилище для всех подкоманд"""
     ctx.obj = JSONStorage()
 
-@click.command()
+
+@click.command(help="Check connection to the application.")
 def hello():
     click.echo(f"Hello, this is simple CLI task manager!")
 
 
-@click.command()
+@click.command(help="Add a new task to the tracker.")
 @click.option("--title", "-t", help="The title of the task.",
               prompt="Enter the title of the task", type=str)
-@click.option("--description", "-d", help="The description of the task.",
+@click.option("--description", "-d", help="The detailed description of the task.",
               prompt="Enter the description of the task", type=str)
 @click.pass_context
 def add(ctx: click.Context, title: str, description: str):
@@ -32,8 +34,10 @@ def add(ctx: click.Context, title: str, description: str):
         click.echo(f"Error while adding task: {e}")
 
 
-@click.command()
-@click.option("--filter", "-f", help="The filter of the task.", type=str, default="all")
+@click.command(help="Display the list of all saved tasks.")
+@click.option("--filter", "-f",
+              help="Filter tasks by status: 'all', 'i' - In progress, or 'd' - Done.",
+              type=str, default="all", show_default=True)
 @click.pass_context
 def list(ctx: click.Context, filter: str):
     try:
@@ -48,7 +52,7 @@ def list(ctx: click.Context, filter: str):
         click.echo(f"Error while listing tasks: {e}")
 
 
-@click.command()
+@click.command(help="Update a task's status by its ID.")
 @click.argument("id", type=int)
 @click.argument("status", type=str)
 @click.pass_context
@@ -64,10 +68,10 @@ def status(ctx: click.Context, id: int, status: str):
         click.echo(f"Error while updating task status: {e}")
 
 
-@click.command()
+@click.command(help="Update task title and/or description.")
 @click.argument("id", type=int)
-@click.option("--title", "-t", help="The title of the task.", type=str, default="")
-@click.option("--description", "-d", help="The description of the task.", default="", type=str)
+@click.option("--title", "-t", help="The new title for the task.", type=str, default="")
+@click.option("--description", "-d", help="The new description for the task.", default="", type=str)
 @click.pass_context
 def update(ctx: click.Context, id: int, title: str, description: str):
     try:
@@ -84,7 +88,7 @@ def update(ctx: click.Context, id: int, title: str, description: str):
         click.echo(f"Error while updating task info: {e}")
 
 
-@click.command()
+@click.command(help="Permanently delete a task from the storage.")
 @click.argument("id", type=int)
 @click.pass_context
 def delete(ctx: click.Context, id: int):
@@ -93,6 +97,7 @@ def delete(ctx: click.Context, id: int):
         click.echo(f"Task {id} was deleted")
     except Exception as e:
         click.echo(f"Error while deleting task: {e}")
+
 
 cli.add_command(hello)
 cli.add_command(add)
