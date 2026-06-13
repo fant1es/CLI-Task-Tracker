@@ -36,8 +36,10 @@ class JSONStorage(object):
 
             all_tasks_dict["tasks"].append(task_dict)
 
-            all_tasks_dict = orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2)
-            self.file_path.write_bytes(all_tasks_dict)
+            # Для порядкового отображения сортируем по id
+            all_tasks_dict["tasks"].sort(key=lambda x: x["id"])
+
+            self.file_path.write_bytes(orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2))
 
             return task_dict["id"]
 
