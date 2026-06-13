@@ -117,3 +117,18 @@ class JSONStorage(object):
 
         except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError, Exception) as e:
             raise e
+
+    def delete_task(self, id: int):
+        """Удаляет задание по id"""
+        try:
+            all_tasks_dict = orjson.loads(self.file_path.read_bytes())
+            target_task_index = self.find_task_index(id, all_tasks_dict["tasks"])
+
+            if target_task_index is not None:
+                all_tasks_dict["tasks"].pop(target_task_index)
+                # Нужно подумать что при удалении/добавлении с id делать
+                all_tasks_dict["tasks_count"] -= 1
+
+            self.file_path.write_bytes(orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2))
+        except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError, Exception) as e:
+            raise e

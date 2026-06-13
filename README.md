@@ -51,3 +51,4 @@ Console output: `Hello, this is simple CLI task manager!`
 - [x] `update [id] [new title] [new description]` — edit task info.
 - [ ] `delete [id]` — delete task by id.
 - [x] `status [id] [status]` — change task status.
+- [ ] add setuping project as package for console

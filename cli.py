@@ -74,11 +74,22 @@ def update(id: int, title: str, description: str):
     except Exception as e:
         click.echo(f"Error while updating task info: {e}")
 
+
+@click.command()
+@click.argument("id", type=int)
+def delete(id: int):
+    try:
+        storage.delete_task(id)
+        click.echo(f"Task {id} was deleted")
+    except Exception as e:
+        click.echo(f"Error while deleting task: {e}")
+
 cli.add_command(hello)
 cli.add_command(add)
 cli.add_command(list)
 cli.add_command(status)
 cli.add_command(update)
+cli.add_command(delete)
 
 if __name__ == '__main__':
     # На время разработки определяем хранилище здесь
