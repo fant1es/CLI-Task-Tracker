@@ -14,15 +14,19 @@ class Task:
 class JSONStorage(object):
     """Класс для работы с JSON файлом"""
     def __init__(self, filename='storage.json'):
-        self.file_path = pathlib.Path(filename)
+        # Создаем папку в домашней директории пользователя
+        # В любом месте через cmd взаимодействие будет с единственным файлом storage.json
+        self.file_dir = pathlib.Path.home() / ".config" / "task-tracker"
+        self.file_path = self.file_dir / filename
+
+        # Создаем родительские папки, если их нет
+        self.file_dir.mkdir(parents=True, exist_ok=True)
 
         # Создание файла хранения при начале работы
         if not self.file_path.exists():
             self.file_path.touch()
-
-            tasks_dict = {"tasks": []} # tasks_count убираем, т.к. меняем логику назначения id
-            serialized = orjson.dumps(tasks_dict,
-                                     option=orjson.OPT_INDENT_2)
+            tasks_dict = {"tasks": []}
+            serialized = orjson.dumps(tasks_dict, option=orjson.OPT_INDENT_2)
             self.file_path.write_bytes(serialized)
 
 
