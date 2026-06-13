@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cli-task-tracker"
+version = "0.1.0"
+description = "A simple CLI to-do list tracker using Click and orjson"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.0.0",
+    "orjson>=3.9.0",
+]
+
+[tool.setuptools]
+py-modules = ["cli", "storage"]
+
+[project.scripts]
+task-tracker = "cli:cli"
