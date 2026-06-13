@@ -1,6 +1,6 @@
 # CLI-Task-Tracker
 
-![Git](https://img.shields.io/badge/Git-2.40-F05032?style=flat-square&logo=git&logoColor=white) ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Click](https://img.shields.io/badge/CLI-Click-green?style=flat-square&logo=python&logoColor=white)
+![Git](https://img.shields.io/badge/Git-2.40-F05032?style=flat-square&logo=git&logoColor=white) ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Click|81](https://img.shields.io/badge/CLI-Click-green?style=flat-square&logo=python&logoColor=white) ![orjson|101](https://img.shields.io/badge/JSON-orjson-green?style=flat-square&logo=json&logoColor=white)
 
 A simple CLI to-do list tracker on Python using **click** library for creating CLI and saving data using .json file
 
@@ -45,10 +45,39 @@ python cli.py hello
 ```
 Console output: `Hello, this is simple CLI task manager!`
 
+## Usage
+
+- **Add a new task:**
+```Bash
+python cli.py add --title "Task Title" --description "Task Description"
+```
+
+- **List tasks** (optional filter: `i` for _In progress_, `d` for _Done_):
+```Bash
+python cli.py list
+python cli.py list --filter i
+```
+
+- **Update task status** (`i` for _In progress_, `d` for _Done_):
+``` Bash
+python cli.py status [ID] [i/d]
+```
+
+- **Update task information** (you can update title, description, or both):
+``` Bash
+python cli.py update [ID] --title "New Title"
+python cli.py update [ID] --description "New Description"
+```
+
+- **Delete task:**
+``` Bash
+python cli.py delete [ID]
+```
+
 ## Roadmap
 - [x] `add [title] [description]` — add new task.
 - [x] `list` — print all tasks (with possible status filters).
-- [x] `update [id] [new title] [new description]` — edit task info.
-- [ ] `delete [id]` — delete task by id.
+- [x] `update [id] [options]` — edit task title and/or description.
+- [x] `delete [id]` — delete task by id.
 - [x] `status [id] [status]` — change task status.
 - [ ] add setuping project as package for console
