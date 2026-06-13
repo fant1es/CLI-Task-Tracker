@@ -17,11 +17,14 @@ def hello():
 @click.option("--description", "-d", help="The description of the task.",
               prompt="Enter the description of the task", type=str)
 def add(title: str, description: str):
-    click.echo(f"Adding {title} to {description}")
-    task = Task(title=title, description=description, status="In progress")
-
     try:
-        storage.add_task(task)
+        task = Task(title=title, description=description, status="In progress")
+
+        task.id = storage.add_task(task)
+
+        click.echo("New task has been added:")
+        click.echo(f"Task ID: {task.id}, Title: {task.title}, Status: {task.status}")
+        click.echo(f"Description: {task.description}")
     except Exception as e:
         click.echo(f"Error while adding task: {e}")
 

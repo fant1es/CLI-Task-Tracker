@@ -20,7 +20,7 @@ class JSONStorage(object):
         if not self.file_path.exists():
             self.file_path.touch()
 
-            tasks_dict = {"tasks": [], "tasks_count": 0} # tasks_count для обновления id новых задач
+            tasks_dict = {"tasks": []} # tasks_count убираем, т.к. меняем логику назначения id
             serialized = orjson.dumps(tasks_dict,
                                      option=orjson.OPT_INDENT_2)
             self.file_path.write_bytes(serialized)
@@ -32,13 +32,14 @@ class JSONStorage(object):
             all_tasks_dict = orjson.loads(self.file_path.read_bytes())
 
             task_dict = asdict(task)
-            task_dict["id"] = all_tasks_dict["tasks_count"] + 1
+            task_dict["id"] = self.find_free_id(all_tasks_dict['tasks'])
 
-            all_tasks_dict["tasks_count"] += 1
             all_tasks_dict["tasks"].append(task_dict)
 
             all_tasks_dict = orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2)
             self.file_path.write_bytes(all_tasks_dict)
+
+            return task_dict["id"]
 
         except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError) as e:
             raise e
@@ -126,9 +127,20 @@ class JSONStorage(object):
 
             if target_task_index is not None:
                 all_tasks_dict["tasks"].pop(target_task_index)
-                # Нужно подумать что при удалении/добавлении с id делать
-                all_tasks_dict["tasks_count"] -= 1
 
             self.file_path.write_bytes(orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2))
         except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError, Exception) as e:
+            raise e
+
+    def find_free_id(self, tasks: list[dict]) -> int | None:
+        """Ищет свободный id для новой задачи"""
+        try:
+            ids = {task["id"] for task in tasks}
+            free_id = 1
+            while True:
+                if free_id not in ids:
+                    return free_id
+                free_id += 1
+
+        except Exception as e:
             raise e
