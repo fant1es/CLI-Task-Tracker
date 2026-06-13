@@ -41,9 +41,24 @@ def list(filter: str):
         click.echo(f"Error while listing tasks: {e}")
 
 
+@click.command()
+@click.argument("id", type=int)
+@click.argument("status", type=str)
+def status(id: int, status: str):
+    try:
+        if status not in ["i", "d"]:
+            click.echo(f"Invalid status value: {status}, must be 'i' or 'd'")
+            return
+
+        task_title, new_status = storage.update_task_status(id, status)
+        click.echo(f"Task {task_title} was updated to '{new_status}'")
+    except Exception as e:
+        click.echo(f"Error while updating task status: {e}")
+
 cli.add_command(hello)
 cli.add_command(add)
 cli.add_command(list)
+cli.add_command(status)
 
 if __name__ == '__main__':
     # На время разработки определяем хранилище здесь

@@ -50,4 +50,4 @@ Console output: `Hello, this is simple CLI task manager!`
 - [x] `list` — print all tasks (with possible status filters).
 - [ ] `update [id] [new title] [new description]` — edit task info.
 - [ ] `delete [id]` — delete task by id.
-- [ ] `status [id] [status]` — change task status.
+- [x] `status [id] [status]` — change task status.

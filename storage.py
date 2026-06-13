@@ -63,3 +63,35 @@ class JSONStorage(object):
 
         except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError) as e:
             raise e
+
+    def update_task_status(self, id: int, status: str):
+        """Обновляет статус задачи"""
+        statuses = {
+            "i":"In progress",
+            "d":"Done"
+        }
+
+        try:
+            all_tasks_dict = orjson.loads(self.file_path.read_bytes())
+            task_index = self.find_task_index(id, all_tasks_dict["tasks"])
+            all_tasks_dict["tasks"][task_index]["status"] = statuses[status]
+
+            self.file_path.write_bytes(orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2))
+
+            return all_tasks_dict["tasks"][task_index]["title"], statuses[status]
+
+        except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError, Exception) as e:
+            raise e
+
+    def find_task_index(self, id: int, tasks: list[dict]) -> int | None:
+        """Ищет задачу и возвращает её индекс в списке all_tasks_dict["tasks"]"""
+        task_index = None
+        for i, task in enumerate(tasks):
+            if task["id"] == id:
+                task_index = i
+                break
+
+        if task_index is None:
+            raise Exception(f"Task with id {id} not found")
+
+        return task_index
