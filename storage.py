@@ -42,3 +42,24 @@ class JSONStorage(object):
 
         except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError) as e:
             raise e
+
+
+    def list_tasks(self, filter):
+        """Отображает все хранящиеся задачи пользователю через консоль"""
+        filters = {
+            "i":"In progress",
+            "d":"Done"
+        }
+
+        try:
+            all_tasks_dict = orjson.loads(self.file_path.read_bytes())
+            if filter in filters:
+                filter_status = filters[filter]
+                tasks = [task for task in all_tasks_dict["tasks"] if task["status"] == filters[filter]]
+            else:
+                tasks = all_tasks_dict["tasks"]
+                filter_status = ""
+            return tasks, len(tasks), filter_status
+
+        except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError) as e:
+            raise e
