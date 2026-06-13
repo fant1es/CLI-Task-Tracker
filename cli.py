@@ -55,10 +55,30 @@ def status(id: int, status: str):
     except Exception as e:
         click.echo(f"Error while updating task status: {e}")
 
+
+@click.command()
+@click.argument("id", type=int)
+@click.option("--title", "-t", help="The title of the task.", type=str, default="")
+@click.option("--description", "-d", help="The description of the task.", default="", type=str)
+def update(id: int, title: str, description: str):
+    try:
+        if not title and not description:
+            click.echo(f"No title or description provided. There is nothing to update.")
+            return
+
+        updated_task = storage.update_task_info(id, title, description)
+
+        click.echo(f"Task {id} was updated:")
+        click.echo(f"Task ID: {updated_task.id}, Title: {updated_task.title}, Status: {updated_task.status}")
+        click.echo(f"Description: {updated_task.description}")
+    except Exception as e:
+        click.echo(f"Error while updating task info: {e}")
+
 cli.add_command(hello)
 cli.add_command(add)
 cli.add_command(list)
 cli.add_command(status)
+cli.add_command(update)
 
 if __name__ == '__main__':
     # На время разработки определяем хранилище здесь

@@ -95,3 +95,25 @@ class JSONStorage(object):
             raise Exception(f"Task with id {id} not found")
 
         return task_index
+
+    def update_task_info(self, id: int, new_title: str, new_description: str):
+        """Обновляет название и описание задачи"""
+        try:
+            all_tasks_dict = orjson.loads(self.file_path.read_bytes())
+            task_index = self.find_task_index(id, all_tasks_dict["tasks"])
+
+            target_task = all_tasks_dict["tasks"][task_index]
+            if new_title:
+                target_task["title"] = new_title
+            if new_description:
+                target_task["description"] = new_description
+
+            self.file_path.write_bytes(orjson.dumps(all_tasks_dict, option=orjson.OPT_INDENT_2))
+
+            return Task(id=target_task["id"],
+                        title=target_task["title"],
+                        description=target_task["description"],
+                        status=target_task["status"])
+
+        except (orjson.JSONDecodeError, orjson.JSONEncodeError, FileNotFoundError, Exception) as e:
+            raise e
